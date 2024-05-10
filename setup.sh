@@ -74,14 +74,22 @@ update_system() {
     apt update && apt upgrade -y
 }
 
-# Function to configure firewall
+# Function to install and configure firewall
 configure_firewall() {
-    echo "Setting up the firewall..."
-    ufw allow 22/tcp
-    ufw allow 80/tcp
-    ufw allow 443/tcp
-    ufw allow 51820/udp
+    echo "Checking for UFW (Uncomplicated Firewall)..."
+    if ! command -v ufw &> /dev/null; then
+        echo "UFW is not installed. Installing now..."
+        apt-get update
+        apt-get install ufw -y
+    fi
+
+    echo "Configuring UFW rules..."
+    ufw allow 22/tcp # SSH
+    ufw allow 80/tcp # HTTP
+    ufw allow 443/tcp # HTTPS
+    ufw allow 51820/udp # WireGuard
     ufw enable
+    ufw status verbose
 }
 
 # Main function to set up the VPN
