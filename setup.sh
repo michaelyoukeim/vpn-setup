@@ -25,7 +25,7 @@ setup_env() {
         fi
     else
         echo ".env file found. Loading environment variables..."
-        set -a
+        set -a # Automatically export all variables
         while read -r line; do
             if [[ "$line" =~ ^[^#]*= ]]; then
                 export "$line"
@@ -35,24 +35,12 @@ setup_env() {
     fi
 }
 
-# Function to configure V2Ray config.json
-configure_v2ray() {
-    echo "Configuring V2Ray..."
-    if [ -f "./v2ray/template_config.json" ]; then
-        envsubst < "./v2ray/template_config.json" > "./v2ray/config.json"
-        echo "V2Ray configuration is updated."
-    else
-        echo "Error: V2Ray template_config.json not found!"
-        exit 1
-    fi
-}
-
 # Function to install Docker and Docker Compose
 install_docker() {
     echo "Checking for Docker..."
     if ! command -v docker &> /dev/null; then
         echo "Docker could not be found, installing Docker..."
-        curl -fsSL https://get.docker.com -o get-docker.sh
+        curl -fsSL https://get.docker.com -o get-docker.sh && yes | sh get-docker.sh
         sh get-docker.sh
     else
         echo "Docker is already installed."
@@ -84,18 +72,19 @@ configure_firewall() {
     fi
 
     echo "Configuring UFW rules..."
-    ufw allow 22/tcp # SSH
-    ufw allow 80/tcp # HTTP
-    ufw allow 443/tcp # HTTPS
-    ufw allow 51820/udp # WireGuard
-    ufw enable
+    for port in 22/tcp 80/tcp 443/tcp 51820/udp; do
+        if ! ufw status | grep -q "$port"; then
+            ufw allow "$port"
+        fi
+    done
+
+    echo "y" | ufw enable
     ufw status verbose
 }
 
 # Main function to set up the VPN
 setup_vpn() {
     setup_env
-    configure_v2ray
     install_docker
     update_system
     configure_firewall
