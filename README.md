@@ -2,23 +2,29 @@
 
 ## Installation Instructions
 
-1. Clone the repository:
+1. Install Git
+   ```bash
+   sudo apt update
+   sudo apt install git -y
+   ```
+
+2. Clone the repository:
    ```bash
    git clone https://github.com/michaelyoukeim/vpn-setup.git /opt/vpn-setup
    cd /opt/vpn-setup
    ```
 
-2. Copy the `.env.example` to `.env` and update the variables accordingly.
+3. Copy the `.env.example` to `.env` and update the variables accordingly.
    ```bash
    cp .env.example .env
    ```
 
-3. Make the setup script executable:
+4. Make the setup script executable:
    ```bash
    chmod +x setup.sh
    ```
 
-4. Run the setup script:
+5. Run the setup script:
    ```bash
    ./setup.sh
    ```
