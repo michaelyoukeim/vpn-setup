@@ -20,3 +20,6 @@ __pycache__/
 .idea/
 *.swp
 *.swo
+
+# Ignore the actual v2ray config file
+v2ray/config.json
