@@ -1,0 +1,22 @@
+# General
+.env
+*.log
+*.cache
+*.bak
+*.tmp
+node_modules/
+dist/
+
+# Docker specific
+docker-compose.override.yml
+
+# Python environments
+__pycache__/
+*.py[cod]
+*.pyc
+
+# IDE/editor specific
+.vscode/
+.idea/
+*.swp
+*.swo
