@@ -25,7 +25,13 @@ setup_env() {
         fi
     else
         echo ".env file found. Loading environment variables..."
-        export $(cat .env | xargs)
+        set -a
+        while read -r line; do
+            if [[ "$line" =~ ^[^#]*= ]]; then
+                export "$line"
+            fi
+        done < .env
+        set +a
     fi
 }
 
